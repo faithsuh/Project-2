@@ -1,0 +1,65 @@
+from tkinter import *
+from tkcalendar import Calendar
+from datetime import datetime
+
+
+class Gui:
+    def __init__(self, window) -> None:
+        """
+        Method to initialize the variables.
+        """
+        self.window = window
+
+        self.name_label = Label(self.window, text='Name', bg='pink')
+        self.name = Entry(self.window, width=15)
+        self.BirthDate_label = Label(self.window, text='Date of birth (DOB)', font='Times 15 underline', bg='pink')
+        self.cal = Calendar(self.window, selectmode='day', year=2004, month=5, day=22, background="black",
+                            foreground="pink")
+        self.number = IntVar()
+        self.button_calculate = Button(self.window, text='Calculate', command=self.submit, highlightbackground="pink")
+        self.button_reset = Button(self.window, text='Reset', bg='pink', command=self.reset, highlightbackground="pink")
+        self.check_name = Label(self.window, text='', bg='pink')
+        self.output_label = Label(self.window, text='', bg='pink')
+
+        self.name_label.pack()
+        self.name.pack(pady=15)
+        self.BirthDate_label.pack(pady=20)
+        self.cal.pack(pady=5)
+        self.check_name.pack()
+        self.output_label.pack()
+        self.button_calculate.pack(side='bottom')
+        self.button_reset.pack(side='bottom')
+
+    def submit(self) -> None:
+        """
+        Method to calculate the user's age.
+        """
+        try:
+            user_name = str(self.name.get())
+            birth_date = self.cal.selection_get()
+            current_date = datetime.now()
+
+            # calculating the age of the user.
+            user_age = current_date.year - birth_date.year - (
+                    (current_date.month, current_date.day) < (birth_date.month, birth_date.year))
+            self.output_label.config(text=f'Hi {user_name}! You are {user_age} years old :)', fg='green')
+            if not user_name.strip() or any(char.isdigit() for char in user_name):
+                raise ValueError
+            if birth_date.year > current_date.year:
+                raise AttributeError
+            else:
+                self.check_name.config(text='')
+        except ValueError:
+            self.output_label.config(text='Invalid name Input!', fg='red')
+
+        except AttributeError:
+            self.output_label.config(text=f'Please select a year less than the current year', fg='red')
+
+    def reset(self) -> None:
+        """
+        Method to reset the input field to enter a new entry.
+        """
+        self.output_label.config(text=f'')
+        self.name.focus()
+        self.name.delete(0, END)
+        self.cal.focus_set()
