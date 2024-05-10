@@ -1,0 +1,16 @@
+from gui import *
+
+
+def main():
+    window = Tk()
+    window.title('Age Calculator')
+    window.geometry('400x400')
+    window.configure(bg='pink')
+    window.resizable(False, False)
+    Gui(window)
+
+    window.mainloop()
+
+
+if __name__ == '__main__':
+    main()
